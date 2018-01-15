@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
 
 int main() {
     int ss, cli, pid;
@@ -12,6 +13,8 @@ int main() {
     socklen_t ad_length = sizeof(ad);
 
     // create the socket
+    // AF_INET for address family ipv4
+    // SOCK_STREAM for TCP
     ss = socket(AF_INET, SOCK_STREAM, 0);
 
     // bind the socket to port 12345
