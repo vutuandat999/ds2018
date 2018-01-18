@@ -10,8 +10,8 @@ Groups are expected to:
 Group Info
 =======================
 
-* Bùi Ngọc Sơn (USTHBI5-116)
-* Trần Thanh Tùng (USTHBI5-149)
 * Trần Bảo Dương (USTHBI6-030)
 * Vũ Tuấn Đạt (USTHBI6-032)
-* Hà ANh Tuấn (USTHBI5-143)
+* Hà Anh Tuấn (USTHBI6-143)
+* Bùi Ngọc Sơn (USTHBI5-116)
+* Trần Thanh Tùng (USTHBI6-149)

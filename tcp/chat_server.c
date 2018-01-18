@@ -4,6 +4,64 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
+
+#define LENGTH 512
+
+
+int receive(int cli){
+    char revbuf[LENGTH];
+
+    char* fr_name = "./server_receive.txt";
+    FILE *fr = fopen(fr_name, "a");
+    if(fr == NULL)
+        printf("File %s Cannot be opened file on server.\n", fr_name);
+    else
+    {
+        bzero(revbuf, LENGTH);
+        int fr_block_sz = 0;
+        //int success = 0;
+        //while(success == 0)
+        //{
+        while(fr_block_sz = recv(cli, revbuf, LENGTH, 0)) //could it be sockfd?
+        {
+            int write_sz = fwrite(revbuf, sizeof(char), fr_block_sz, fr);
+            if(fr_block_sz)
+            {
+                break;
+            }
+            bzero(revbuf, LENGTH);
+        }
+        printf("Ok received from client!\n");
+        fclose(fr);
+        //}
+    }
+}
+
+int sendMessage(int cli) {
+    char* fs_name = "./server_send.txt";
+    char sdbuf[LENGTH]; // Send buffer
+    printf("[Server] Sending %s to the Client...", fs_name);
+    FILE *fs = fopen(fs_name, "r");
+    if(fs == NULL)
+    {
+        printf("ERROR: File %s not found on server.\n", fs_name);
+        exit(1);
+    }
+
+    bzero(sdbuf, LENGTH);
+    int fs_block_sz;
+    while((fs_block_sz = fread(sdbuf, sizeof(char), LENGTH, fs))>0)
+    {
+        if(send(cli, sdbuf, fs_block_sz, 0) < 0)
+        {
+            printf("ERROR: Failed to send file %s.\n", fs_name);
+            exit(1);
+        }
+        bzero(sdbuf, LENGTH);
+    }
+    printf("Ok sent to client!\n");
+}
 
 int main() {
     int ss, cli, pid;
@@ -12,6 +70,8 @@ int main() {
     socklen_t ad_length = sizeof(ad);
 
     // create the socket
+    // AF_INET for address family ipv4
+    // SOCK_STREAM for TCP
     ss = socket(AF_INET, SOCK_STREAM, 0);
 
     // bind the socket to port 12345
@@ -34,13 +94,15 @@ int main() {
             printf("client connected\n");
             while (1) {
                 // it's client turn to chat, I wait and read message from client
-                read(cli, s, sizeof(s));
-                printf("client says: %s\n",s);
+//                read(cli, s, sizeof(s));
+//                printf("client says: %s\n",s);
+                receive(cli);
 
                 // now it's my (server) turn
-                printf("server>", s);
-                scanf("%s", s);
-                write(cli, s, strlen(s) + 1);
+//                printf("server>", s);
+//                scanf("%s", s);
+//                write(cli, s, strlen(s) + 1);
+                sendMessage(cli);
             }
             return 0;
         }
