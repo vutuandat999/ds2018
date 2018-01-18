@@ -1,0 +1,39 @@
+Report 1
+Goal: 1-1 File transfer over TCP/IP in CLI, based on the provided chat system
+- One server
+- One client
+- Using socket
+Group I
+Members :-Bùi Ngọc Sơn
+      	 -Vũ Tuấn Đạt
+  	     -Trần Bảo Dương
+  	     -Hà Anh Tuấn 
+  	     -Trần Thanh Tùng
+Q1: How you design your protocol. Figure
+	Patterns of communication: peer-to-peer (1 client - 1 server)
+	Design goal: sending content of file from client to server and from server to client
+  This is the graph:
+  https://imgur.com/a/RNS3F
+Q2: How you organize your system. Figure.
+Server:
+-create socket
+-bind to port
+-listen to client
+-Accept connect request from client
+-Load file content from server and send to client
+-Receive file from client
+Client:
+-create socket
+-connect to server port
+-load file content from computer and send to server
+-read and write file content sent from client.
+  This is the graph:
+  https://imgur.com/a/UMgBX
+Q3: How you implement the file transfer. Code snippet.
+ 
+Client:
+This is the link to our code snippet:
+https://imgur.com/a/oVJeF
+Server:
+This is the link to our code snippet:
+https://imgur.com/a/G4SHV
