@@ -1,0 +1,6 @@
+module RPC {
+	interface Chat {
+		string sendFile();
+        string receiveFile(in string mesg);
+	};
+};
