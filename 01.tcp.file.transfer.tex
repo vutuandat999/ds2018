@@ -1,39 +1,54 @@
-Report 1
-Goal: 1-1 File transfer over TCP/IP in CLI, based on the provided chat system
-- One server
-- One client
-- Using socket
-Group I
-Members :-Bùi Ngọc Sơn
-      	 -Vũ Tuấn Đạt
-  	     -Trần Bảo Dương
-  	     -Hà Anh Tuấn 
-  	     -Trần Thanh Tùng
-Q1: How you design your protocol. Figure
-	Patterns of communication: peer-to-peer (1 client - 1 server)
-	Design goal: sending content of file from client to server and from server to client
-  This is the graph:
-  https://imgur.com/a/RNS3F
-Q2: How you organize your system. Figure.
-Server:
--create socket
--bind to port
--listen to client
--Accept connect request from client
--Load file content from server and send to client
--Receive file from client
-Client:
--create socket
--connect to server port
--load file content from computer and send to server
--read and write file content sent from client.
-  This is the graph:
-  https://imgur.com/a/UMgBX
-Q3: How you implement the file transfer. Code snippet.
- 
-Client:
-This is the link to our code snippet:
-https://imgur.com/a/oVJeF
-Server:
-This is the link to our code snippet:
-https://imgur.com/a/G4SHV
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\title{Report 1}
+\author{Vu Tuan Dat }
+\date{January 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\subsection{Goal:\\ -1-1 File transfer over TCP/IP in CLI, based on the provided chat system
+\\- One server
+\\- One client
+\\- Using socket
+}
+\subsection{Members:\\-Bui Ngoc Son - USTHBI5-116\\-Vu Tuan Dat - USTHBI6-032\\-Tran Bao Duong - USTHBI6-030\\-Ha Anh Tuan - USTHBI6-143\\-Tran Thanh Tung - USTHBI5-149}
+\section{Question 1}
+\subsection{ How you design your protocol. Figure\\
+	-Patterns of communication: peer-to-peer (1 client - 1 server)\\
+	-Design goal: sending content of file from client to server and from server to client
+}
+\includegraphics{img/hinh1}
+\section{Question2}
+\subsection{
+-Server:\\
++create socket\\
+    +bind to port\\
+    +listen to client\\
+    +Accept connect request from client\\
+    +Load file content from server and send to client\\
+    +Receive file from client\\
+-Client:\\
+    +create socket\\
+    +connect to server port\\
+    +load file content from computer and send to server.\\
+    +read and write file content sent from client.
+}
+\includegraphics{img/hinh2}
+\section{Question3}
+\subsection{How you implement the file transfer. Code snippet.\\ -Client}
+\includegraphics{img/hinh3}
+\subsection{-Server}
+\includegraphics{img/hinh4}
+\section{Question 4}
+\subsection{Who does what?\\
+-Son and Tuan: Working on client.\\
+-Dat and Duong: Working on server.\\
+-Tung: Write the report
+}
+\end{document}
+
