@@ -9,7 +9,7 @@
 #include <mpi.h>
 #define LENGTH 512
 
-void sendFile(int serv){
+void sendFile(int dest, int tag){
     char* fs_name = "./client_send.txt";
     char sdbuf[LENGTH];
     printf("[Client] Sending %s to the Server... ", fs_name);
@@ -20,20 +20,12 @@ void sendFile(int serv){
         exit(1);
     }
 
-    bzero(sdbuf, LENGTH);
-    int fs_block_sz;
-    while((fs_block_sz = fread(sdbuf, sizeof(char), LENGTH, fs)) > 0)
-    {
-        if(send(serv, sdbuf, fs_block_sz, 0) < 0)
-        {
-            fprintf(stderr, "ERROR: Failed to send file %s. (errno = %d)\n", fs_name, errno);
-            break;
-        }
-        bzero(sdbuf, LENGTH);
-    }
+    fread(sdbuf, sizeof(char), LENGTH, fs);
+    /* send message to thread 0 */
+    MPI_Send(sdbuf, strlen(sdbuf)+1, MPI_CHAR,dest, tag, MPI_COMM_WORLD);
     printf("Ok File %s from Client was Sent!\n", fs_name);
 }
-void receiveFile(int serv){
+void receiveFile(int source, int num_procs, int tag, MPI_Status status){
     char revbuf[LENGTH];
     printf("[Client] Receiveing file from Server and saving it as final.txt...");
     char* fr_name = "./client_receive.txt";
@@ -42,27 +34,11 @@ void receiveFile(int serv){
         printf("File %s Cannot be opened.\n", fr_name);
     else
     {
-        bzero(revbuf, LENGTH);
-        int fr_block_sz = 0;
-        while((fr_block_sz = recv(serv, revbuf, LENGTH, 0)) > 0)
+        for (source = 1; source < num_procs; source++)
         {
-            int write_sz = fwrite(revbuf, sizeof(char), fr_block_sz, fr);
-            bzero(revbuf, LENGTH);
-            if (fr_block_sz == 0 || fr_block_sz != 512)
-            {
-                break;
-            }
-        }
-        if(fr_block_sz < 0)
-        {
-            if (errno == EAGAIN)
-            {
-                printf("recv() timed out.\n");
-            }
-            else
-            {
-                fprintf(stderr, "recv() failed due to errno = %d\n", errno);
-            }
+            MPI_Recv(revbuf, 100, MPI_CHAR, source, tag,MPI_COMM_WORLD, &status);
+            fwrite(revbuf, sizeof(char), sizeof(revbuf), fr);
+            printf("Process 0 received %s from %d\n",revbuf,source);
         }
         printf("Ok received from server!\n");
         fclose(fr);
@@ -95,20 +71,12 @@ int main(int argc, char* argv[]) {
     while (1) {
         if (my_rank != 0)   //IF I'M ANOTHER THREAD
         {
-            sendFile()
-            /* create message */
-            snprintf(message,26, "Greetings from process %d!", my_rank);
-            /* send message to thread 0 */
-            MPI_Send(message, strlen(message)+1, MPI_CHAR,dest, tag, MPI_COMM_WORLD);
+            sendFile(dest, tag);
         }
         else  //IF I'M THREAD 0
         {
             printf("Number of processes in system: %d\n",num_procs);
-            for (source = 1; source < num_procs; source++)
-            {
-                MPI_Recv(message, 100, MPI_CHAR, source, tag,MPI_COMM_WORLD, &status);
-                printf("Process 0 received %s from %d\n",message,source);
-            }
+            receiveFile(source, num_procs, tag, status);
         }
 
         printf("Continue?(Y/N)\n");
